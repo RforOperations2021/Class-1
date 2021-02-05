@@ -30,27 +30,30 @@ ui <- fluidPage(
                   selected = "mpaa_rating"),
       
       # Set alpha level ---------------------------------------------
-      sliderInput(inputId = "alpha", 
+      sliderInput(inputId = "plotAlpha", 
                   label = "Alpha:", 
                   min = 0, max = 1, 
-                  value = 0.5)
+                  value = 0.75)
     ),
     
     # Output: Show scatterplot --------------------------------------
     mainPanel(
-      plotOutput(outputId = "scatterplot")
+      plotOutput(outputId = "scatterplot"),
+      dataTableOutput("table")
     )
   )
 )
 
 # Define server function required to create the scatterplot ---------
 server <- function(input, output) {
-  
+  output$table <- DT::renderDataTable({
+    
+  })
   # Create scatterplot object the plotOutput function is expecting --
   output$scatterplot <- renderPlot({
     ggplot(data = movies, aes_string(x = input$x, y = input$y,
                                      color = input$z)) +
-      geom_point(alpha = input$alpha)
+      geom_point(alpha = input$plotAlpha)
   })
 }
 
